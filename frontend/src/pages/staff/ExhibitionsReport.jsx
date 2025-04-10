@@ -174,7 +174,7 @@ const ExhibitionReport = () => {
   // Combine the totals: special sums added individually and regular aggregated once.
   const totalAmountMade = specialTotalAmount + regularTotalAmount;
   const totalTicketsBought = specialTotalTickets + regularTotalTickets;
-  const totalComplaints = filteredExhibitions.reduce((acc, ex) => acc + Number(ex.Num_Complaints || 0), 0);
+  const totalComplaints = filteredExhibitions.reduce((acc, ex) => acc + Number(ex.complaintCount || 0), 0);
 
   return (
     <main className="exh-report-container">
@@ -239,7 +239,7 @@ const ExhibitionReport = () => {
         <div>Total Exhibits: {filteredExhibitions.length}</div>
         <div>Total Tickets Bought: {totalTicketsBought}</div>
         <div>Total Amount Made: ${parseFloat(totalAmountMade).toLocaleString()}</div>
-        <div>Total Complaints: {totalComplaints}</div>
+        <div>Total Feedback: {totalComplaints}</div>
       </div>
 
       {/* Exhibitions Table */}
