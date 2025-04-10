@@ -6,7 +6,7 @@ import "swiper/css";
 import "swiper/css/pagination";
 import "../styles/artworks.css";
 
-const Artworks = () => {
+const Artworks = () => { 
   // Retrieve exhibitionId from URL using react router's useParams hook
   const { exhibitionId } = useParams();
   const [artworks, setArtworks] = useState([]);

@@ -109,6 +109,47 @@ module.exports = (req, res) => {
     return;
   }
 
+
+  if (parsedUrl.pathname === "/manage-exhibition/manage" && method === "GET") {
+    // Optionally use authMiddleware(["staff", "admin"]) here
+    db.query(
+      "SELECT * FROM exhibitions",
+      (err, results) => {
+        if (err) {
+          res.writeHead(500, { "Content-Type": "application/json" });
+          return res.end(
+            JSON.stringify({
+              message: "Error retrieving exhibitions",
+              error: err,
+            })
+          );
+        }
+
+        // Convert any binary exhibition_image to a Base64 data URL
+        const updatedResults = results.map((row) => {
+          if (row.exhibition_image && Buffer.isBuffer(row.exhibition_image)) {
+            try {
+              row.exhibition_image = `data:image/jpeg;base64,${row.exhibition_image.toString(
+                "base64"
+              )}`;
+            } catch (conversionErr) {
+              console.error("Error converting image data", conversionErr);
+              row.exhibition_image = null;
+            }
+          }
+          return row;
+        });
+
+        console.log("Exhibitions with converted image data:", updatedResults);
+        res.writeHead(200, { "Content-Type": "application/json" });
+        res.end(JSON.stringify(updatedResults));
+      }
+    );
+    return;
+  }
+
+
+
   // POST /manage-exhibition - Add a new exhibition (with auto-ticket creation if required)
   if (parsedUrl.pathname === "/manage-exhibition" && method === "POST") {
     let body = "";
@@ -354,6 +395,78 @@ module.exports = (req, res) => {
     });
     return;
   }
+
+  // 🔹 PUT /manage-exhibition/reactivate - Reactivate an exhibition by updating is_active to true
+if (method === "PUT" && parsedUrl.pathname === "/manage-exhibition/reactivate") {
+  let body = "";
+  req.on("data", (chunk) => {
+    body += chunk;
+  });
+  req.on("end", () => {
+    try {
+      const { Exhibition_ID } = JSON.parse(body);
+      if (!Exhibition_ID) {
+        res.writeHead(400, { "Content-Type": "application/json" });
+        return res.end(JSON.stringify({ error: "Exhibition_ID is required" }));
+      }
+      // Update only the is_active column to true (reactivate)
+      const sql = "UPDATE exhibitions SET is_active = true WHERE Exhibition_ID = ?";
+      db.query(sql, [Exhibition_ID], (err, result) => {
+        if (err) {
+          console.error("Error reactivating exhibition:", err);
+          res.writeHead(500, { "Content-Type": "application/json" });
+          return res.end(JSON.stringify({ error: "Error reactivating exhibition", details: err.message }));
+        }
+        res.writeHead(200, { "Content-Type": "application/json" });
+        return res.end(JSON.stringify({ message: "Exhibition reactivated successfully" }));
+      });
+    } catch (parseError) {
+      console.error("JSON Parse Error:", parseError);
+      res.writeHead(400, { "Content-Type": "application/json" });
+      return res.end(JSON.stringify({ error: "Invalid JSON format", details: parseError.message }));
+    }
+  });
+  return;
+}
+
+
+  // 🔹 PUT /manage-exhibition/deactivate - Deactivate an exhibition by updating is_active to false
+if (method === "PUT" && parsedUrl.pathname === "/manage-exhibition/deactivate") {
+  let body = "";
+  req.on("data", (chunk) => {
+    body += chunk;
+  });
+  req.on("end", () => {
+    try {
+      const { Exhibition_ID } = JSON.parse(body);
+      if (!Exhibition_ID) {
+        res.writeHead(400, { "Content-Type": "application/json" });
+        return res.end(JSON.stringify({ error: "Exhibition_ID is required" }));
+      }
+      // Update only the is_active column
+      const sql = "UPDATE exhibitions SET is_active = false WHERE Exhibition_ID = ?";
+      db.query(sql, [Exhibition_ID], (err, result) => {
+        if (err) {
+          console.error("Error deactivating exhibition:", err);
+          res.writeHead(500, { "Content-Type": "application/json" });
+          return res.end(
+            JSON.stringify({ error: "Error deactivating exhibition", details: err.message })
+          );
+        }
+        res.writeHead(200, { "Content-Type": "application/json" });
+        return res.end(JSON.stringify({ message: "Exhibition deactivated successfully" }));
+      });
+    } catch (parseError) {
+      console.error("JSON Parse Error:", parseError);
+      res.writeHead(400, { "Content-Type": "application/json" });
+      return res.end(
+        JSON.stringify({ error: "Invalid JSON format", details: parseError.message })
+      );
+    }
+  });
+  return;
+}
+
 
   // DELETE /manage-exhibition - Delete an exhibition (if implemented)
   if (parsedUrl.pathname === "/manage-exhibition" && method === "DELETE") {

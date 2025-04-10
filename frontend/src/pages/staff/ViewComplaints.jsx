@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
-import "../../styles/complaints.css";
+// imported the same CSS file as ExhibitionReport.jsx for unified styling lol make my life easier
+import "../../styles/reports.css";
 
 const ViewComplaints = () => {
   const [user, setUser] = useState(null);
@@ -7,15 +8,20 @@ const ViewComplaints = () => {
   const [summary, setSummary] = useState(null);
   const [editingComplaintId, setEditingComplaintId] = useState(null);
   const [notesInput, setNotesInput] = useState("");
-  const [exhibitions, setExhibitions] = useState([])
+  const [exhibitions, setExhibitions] = useState([]);
 
   // Filters
   const [filterType, setFilterType] = useState("All");
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");
 
-  useEffect(() => { // https://museumdb.onrender.com/contact
-    fetch("https://museumdb.onrender.com/manage-exhibition") // https://museumdb.onrender.com
+  // Calculate unique exhibit names based on Complaint_Type (which now holds exhibit names)
+  const uniqueComplaintTypes = Array.from(
+    new Set(complaints.map((c) => c.Complaint_Type))
+  ).filter(Boolean).sort();
+
+  useEffect(() => {
+    fetch("https://museumdb.onrender.com/manage-exhibition")
       .then((res) => {
         if (!res.ok) throw new Error(`Failed to fetch: ${res.status}`);
         return res.json();
@@ -27,8 +33,8 @@ const ViewComplaints = () => {
   }, []);
 
   useEffect(() => {
-    fetch("https://museumdb.onrender.com/auth/profile", { // http://localhost:5000/auth/profile
-      credentials: "include", // https://museumdb.onrender.com/auth/profile
+    fetch("https://museumdb.onrender.com/auth/profile", {
+      credentials: "include",
     })
       .then((res) => {
         if (!res.ok) throw new Error("Not logged in");
@@ -43,8 +49,8 @@ const ViewComplaints = () => {
 
   const fetchComplaints = async () => {
     try {
-      let url = "https://museumdb.onrender.com/complaints?"; // http://localhost:5000/complaints?
-      if (filterType !== "All") url += `type=${encodeURIComponent(filterType)}&`; // https://museumdb.onrender.com/complaints?
+      let url = "https://museumdb.onrender.com/complaints?";
+      if (filterType !== "All") url += `type=${encodeURIComponent(filterType)}&`;
       if (startDate) url += `start=${startDate}&`;
       if (endDate) url += `end=${endDate}&`;
 
@@ -61,10 +67,11 @@ const ViewComplaints = () => {
 
   const fetchComplaintSummary = async () => {
     try {
-      let url = "https://museumdb.onrender.com/complaints/summary?"; // http://localhost:5000/complaints/summary?
-      if (filterType !== "All") url += `type=${encodeURIComponent(filterType)}&`; // https://museumdb.onrender.com/complaints/summary?
+      let url = "https://museumdb.onrender.com/complaints/summary?";
+      if (filterType !== "All") url += `type=${encodeURIComponent(filterType)}&`;
       if (startDate) url += `start=${startDate}&`;
       if (endDate) url += `end=${endDate}&`;
+
       const res = await fetch(url, {
         credentials: "include",
       });
@@ -101,8 +108,8 @@ const ViewComplaints = () => {
       };
 
       const res = await fetch(
-        `https://museumdb.onrender.com/complaints/${complaint.Complaint_ID}`, // http://localhost:5000/complaints/${complaint.Complaint_ID}
-        { // https://museumdb.onrender.com/complaints/${complaint.Complaint_ID}
+        `https://museumdb.onrender.com/complaints/${complaint.Complaint_ID}`,
+        {
           method: "PUT",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify(updated),
@@ -149,9 +156,9 @@ const ViewComplaints = () => {
         newResolutionTime = `${hours}:${minutes}:${seconds}`;
       }
 
-      const response = await fetch( // http://localhost:5000/complaints/${complaint.Complaint_ID}
+      const response = await fetch(
         `https://museumdb.onrender.com/complaints/${complaint.Complaint_ID}`,
-        { // https://museumdb.onrender.com/complaints/${complaint.Complaint_ID}
+        {
           method: "PUT",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
@@ -191,39 +198,37 @@ const ViewComplaints = () => {
 
   if (!user || (user.role !== "admin" && user.role !== "staff")) {
     return (
-      <main className="view-complaints-container">
+      <main className="exh-report-container">
         <h1>You do not have permission to view this page.</h1>
       </main>
     );
   }
 
   return (
-    <main className="view-complaints-container">
-      <div className="complaints-header">
-        <h1 className="page-title">View Complaints</h1>
+    <main className="exh-report-container">
+      {/* Header */}
+      <div className="exh-report-header">
+        <h1>View Complaints</h1>
       </div>
 
-      {/* Filters */}
-      <div className="filters">
+      {/* Filters - now filtering by Complaint_Type (i.e., exhibit name) */}
+      <div className="exh-report-controls">
         <select
-          className="report-dropdown"
+          className="exh-report-dropdown"
           value={filterType}
           onChange={(e) => setFilterType(e.target.value)}
         >
-          <option value="All">All Types</option>
-          <option value="Ticket Issue">Ticket Issue</option>
-          <option value="Staff Behavior">Staff Behavior</option>
-          <option value="Exhibition Issue">Exhibition Issue</option>
-          <option value="Event Problem">Event Problem</option>
-          {exhibitions.map((exhibit, index) => (
-           <option key={index} value={exhibit.Name}>{exhibit.Name}</option>
-           ))} 
-          <option value="Other">Other</option>
+          <option value="All">All Exhibits</option>
+          {uniqueComplaintTypes.map((type, index) => (
+            <option key={index} value={type}>
+              {type}
+            </option>
+          ))}
         </select>
 
-        <div className="date-filters" style={{ display: "flex", gap: "1rem", alignItems: "center" }}>
-          <div className="date-filter" style={{ display: "flex", alignItems: "center" }}>
-            <label htmlFor="startDate" style={{ marginRight: "0.5rem" }}>From:</label>
+        <div className="exh-report-date-controls">
+          <div className="exh-report-manual-dates">
+            <label htmlFor="startDate">From:</label>
             <input
               type="date"
               id="startDate"
@@ -231,10 +236,9 @@ const ViewComplaints = () => {
               className="report-date"
               onChange={(e) => setStartDate(e.target.value)}
             />
-            <span className="calendar-icon" style={{ marginLeft: "0.5rem" }}>📅</span>
           </div>
-          <div className="date-filter" style={{ display: "flex", alignItems: "center" }}>
-            <label htmlFor="endDate" style={{ marginRight: "0.5rem" }}>To:</label>
+          <div className="exh-report-manual-dates">
+            <label htmlFor="endDate">To:</label>
             <input
               type="date"
               id="endDate"
@@ -242,7 +246,6 @@ const ViewComplaints = () => {
               className="report-date"
               onChange={(e) => setEndDate(e.target.value)}
             />
-            <span className="calendar-icon" style={{ marginLeft: "0.5rem" }}>📅</span>
           </div>
         </div>
 
@@ -258,52 +261,32 @@ const ViewComplaints = () => {
         </button>
       </div>
 
-      {/* Summary Cards */}
+      {/* Summary Section */}
       {summary && (
-        <div className="summary-wrapper">
-          <div className="report-summary-grid">
-            <div className="summary-card">
-              <h3>Open Complaints</h3>
-              <p>{summary.open_complaints}</p>
-            </div>
-            <div className="summary-card">
-              <h3>Resolved Complaints</h3>
-              <p>{summary.resolved_complaints}</p>
-            </div>
-            {filterType === "All" && (
-              <>
-                <div className="summary-card">
-                  <h3>Top Complaint Type</h3>
-                  <p>{summary.top_complaint_type || "N/A"}</p>
-                </div>
-                <div className="summary-card">
-                  <h3>Busiest Complaint Day</h3>
-                  <p>{summary.busiest_day || "N/A"}</p>
-                </div>
-              </>
-            )}
-            <div className="summary-card">
-              <h3>Average Rating</h3>
-              <p>
-                {summary.avg_rating !== null && summary.avg_rating !== undefined
-                  ? Number(summary.avg_rating).toFixed(1)
-                  : "N/A"}
-              </p>
-            </div>
+        <div className="exh-report-summary">
+          <div>Open Complaints: {summary.open_complaints}</div>
+          <div>Resolved Complaints: {summary.resolved_complaints}</div>
+          <div>Top Exhibit: {summary.top_complaint_type || "N/A"}</div>
+          <div>Busiest Day: {summary.busiest_day || "N/A"}</div>
+          <div>
+            Average Rating:{" "}
+            {summary.avg_rating !== null && summary.avg_rating !== undefined
+              ? Number(summary.avg_rating).toFixed(1)
+              : "N/A"}
           </div>
         </div>
       )}
 
       {/* Complaints Table */}
-      <div className="complaints-table-container">
-        <table className="complaints-table">
+      <div className="exh-report-table-container">
+        <table className="exh-report-table">
           <thead>
             <tr>
               <th>Complaint ID</th>
               <th>Customer ID</th>
               <th>Date</th>
               <th>Time (CST)</th>
-              <th>Type</th>
+              <th>Exhibit</th>
               <th>Description</th>
               <th>Status</th>
               <th>Resolution Date</th>
@@ -321,7 +304,9 @@ const ViewComplaints = () => {
                 <tr key={complaint.Complaint_ID}>
                   <td>{complaint.Complaint_ID}</td>
                   <td>{complaint.customer_ID}</td>
-                  <td>{new Date(complaint.Complaint_Date).toLocaleDateString()}</td>
+                  <td>
+                    {new Date(complaint.Complaint_Date).toLocaleDateString()}
+                  </td>
                   <td>{complaint.Complaint_Time || "N/A"}</td>
                   <td>{complaint.Complaint_Type}</td>
                   <td>{complaint.Description}</td>
@@ -340,7 +325,9 @@ const ViewComplaints = () => {
                   </td>
                   <td>
                     {complaint.Resolution_Date
-                      ? `${new Date(complaint.Resolution_Date).toLocaleDateString()} ${complaint.Resolution_Time || ""}`
+                      ? `${new Date(
+                          complaint.Resolution_Date
+                        ).toLocaleDateString()} ${complaint.Resolution_Time || ""}`
                       : "N/A"}
                   </td>
                   <td>

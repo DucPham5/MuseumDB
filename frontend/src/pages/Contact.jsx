@@ -21,17 +21,17 @@ const ContactPage = () => {
     maxStars: 5,
   });
 
-  const topics = [
-    "Ticket Issue",
-    "Staff Behavior",
-    "Exhibition Issue",
-    "Event Problem",
-    ...exhibitions.map((exhibit) => exhibit.Name),
-    "Other",
-  ];
+  const topics = [...exhibitions.map((exhibit) => exhibit.Name), "Other"];
 
-  useEffect(() => { // https://museumdb.onrender.com/contact
-    fetch("https://museumdb.onrender.com/manage-exhibition") // https://museumdb.onrender.com
+  // Compute unique filter options dynamically from reviews' Complaint_Type
+  // (which now holds exhibit names).
+  const filterOptions = useMemo(() => {
+    const types = reviews.map((r) => r.Complaint_Type).filter(Boolean);
+    return Array.from(new Set(types)).sort();
+  }, [reviews]);
+
+  useEffect(() => { 
+    fetch("https://museumdb.onrender.com/manage-exhibition")
       .then((res) => {
         if (!res.ok) throw new Error(`Failed to fetch: ${res.status}`);
         return res.json();
@@ -42,8 +42,8 @@ const ContactPage = () => {
       .catch(() => {});
   }, []);
 
-  useEffect(() => { // https://museumdb.onrender.com/contact
-    fetch("https://museumdb.onrender.com/contact") // https://museumdb.onrender.com
+  useEffect(() => { 
+    fetch("https://museumdb.onrender.com/contact")
       .then((res) => {
         if (!res.ok) throw new Error(`Failed to fetch: ${res.status}`);
         return res.json();
@@ -54,9 +54,9 @@ const ContactPage = () => {
       .catch(() => {});
   }, []);
 
-  useEffect(() => { // http://localhost:5000/auth/profile
+  useEffect(() => { 
     fetch("https://museumdb.onrender.com/auth/profile", { credentials: "include" })
-      .then((res) => { // https://museumdb.onrender.com/auth/profile
+      .then((res) => {
         if (!res.ok) throw new Error("Not logged in");
         return res.json();
       })
@@ -75,7 +75,6 @@ const ContactPage = () => {
 
     if (sortOption === "Most Recent to Oldest") {
       filteredReviews.sort((a, b) => {
-        // Convert dates to ISO string for proper parsing.
         const dateA = new Date(a.Complaint_Date);
         const dateB = new Date(b.Complaint_Date);
         const dateStrA = dateA.toISOString().slice(0, 10); // YYYY-MM-DD
@@ -84,11 +83,6 @@ const ContactPage = () => {
         const timeB = b.Complaint_Time || "00:00:00";
         const dateTimeA = new Date(`${dateStrA}T${timeA}`);
         const dateTimeB = new Date(`${dateStrB}T${timeB}`);
-        console.log(
-          "Sorting (Most Recent to Oldest):",
-          `A: ${dateStrA}T${timeA} => ${dateTimeA.getTime()}`,
-          `B: ${dateStrB}T${timeB} => ${dateTimeB.getTime()}`
-        );
         return dateTimeB - dateTimeA; // Descending: newest first
       });
     } else if (sortOption === "Oldest to Most Recent") {
@@ -124,14 +118,13 @@ const ContactPage = () => {
     e.preventDefault();
 
     if (!user || user.role !== "customer") {
-      alert("Only customers can submit complaints.");
+      alert("Only customers can submit reviews.");
       return;
     }
 
     const newComplaint = {
       customer_ID: user.customer_id,
       complaint_date: new Date().toISOString().slice(0, 10),
-      // This value is in UTC; the backend recalculates Houston time.
       complaint_time: new Date().toISOString().slice(11, 19),
       complaint_type: formData.topic,
       Complaint_Title: formData.title,
@@ -144,7 +137,6 @@ const ContactPage = () => {
       Special_Exhibition_ID: null,
     };
 
-    // Calculate Houston time on the frontend for an optimistic update
     const now = new Date();
     const houstonTime = now.toLocaleTimeString("en-US", {
       timeZone: "America/Chicago",
@@ -154,8 +146,8 @@ const ContactPage = () => {
       second: "2-digit",
     });
 
-    fetch("https://museumdb.onrender.com/contact", { // http://localhost:5000/contact
-      method: "POST", // https://museumdb.onrender.com/contact
+    fetch("https://museumdb.onrender.com/contact", {
+      method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(newComplaint),
     })
@@ -222,9 +214,9 @@ const ContactPage = () => {
               onChange={(e) => setFilter(e.target.value)}
             >
               <option value="All Reviews">All Reviews</option>
-              {topics.map((topic) => (
-                <option key={topic} value={topic}>
-                  {topic}
+              {filterOptions.map((type) => (
+                <option key={type} value={type}>
+                  {type}
                 </option>
               ))}
             </select>

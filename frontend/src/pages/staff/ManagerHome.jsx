@@ -35,51 +35,40 @@ const ManagerHome = () => {
       });
   }, [navigate]);
 
-  const handleNavigation = (event) => {
-    const selectedValue = event.target.value;
-    console.log("[DEBUG - ManagerHome] Dropdown Selected:", selectedValue);
-
-    if (!selectedValue) {
-      console.log("[DEBUG - ManagerHome] No option selected!");
-      return;
-    }
-
-    navigate(selectedValue);
-    event.target.value = ""; // resets dropdown
-  };
-
   return (
-    <main className="admin-container">
-      <div className="admin-dashboard">
-        <div className="manager-title-container">
-          <h3>Manager Dashboard</h3>
+    <main className="admin-container px-10 py-8">
+      {/* Dashboard Title */}
+      <h3 className="text-[#313639] text-4xl mb-8 tracking-wide text-center">
+        Manager Dashboard
+      </h3>
+
+      {/* Two Column Layout */}
+      <div className="admin-dashboard flex justify-between gap-10">
+        {/* Reports Column */}
+        <div className="admin-reports flex flex-col gap-4">
+          <h4 className="text-2xl font-semibold text-[#1e1e1e]">Reports</h4>
+          <button onClick={() => navigate('/admin/view-complaints')} className="admin-button">
+            View Complaints
+          </button>
         </div>
 
-        {/* Profile Button */}
-        <button onClick={() => navigate("/profile")} className="admin-button">
-          Profile
+        {/* Manage Column */}
+        <div className="admin-management flex flex-col gap-4">
+          <h4 className="text-2xl font-semibold text-[#1e1e1e]">Manage</h4>
+          <button onClick={() => navigate('/admin/manage-employees')} className="admin-button">
+            Manage Employees
+          </button>
+          <button onClick={() => navigate('/admin/manage-giftshop')} className="admin-button">
+            Manage Gift Shop
+          </button>
+        </div>
+      </div>
+
+      {/* Profile Button Centered at Bottom */}
+      <div className="mt-10 text-center">
+        <button onClick={() => navigate('/profile')} className="admin-button bg-[#1e1e1e] hover:bg-black">
+          Go to Profile
         </button>
-
-        {/* Management Options */}
-        <select
-          name="management"
-          className="admin-button admin-dropdown"
-          onChange={handleNavigation}
-        >
-          <option value="">Management Options</option>
-          <option value="/admin/manage-employees">Manage Employees</option>
-          <option value="/admin/manage-giftshop">Manage Gift Shop</option>
-        </select>
-
-        {/* Reports Options */}
-        <select
-          name="reports"
-          className="admin-button admin-dropdown"
-          onChange={handleNavigation}
-        >
-          <option value="">View Reports...</option>
-          <option value="/admin/view-complaints">View Complaints</option>
-        </select>
       </div>
     </main>
   );

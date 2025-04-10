@@ -102,7 +102,7 @@ useEffect(() => {
       }`}
     >
       <h1 className="logo">
-        <AnimatedLink to="/">Museum</AnimatedLink>
+        <AnimatedLink to="/">MFA</AnimatedLink>
       </h1>
       <nav className="nav-links">
         <AnimatedLink to="/giftshop">Shop</AnimatedLink>
@@ -145,6 +145,7 @@ useEffect(() => {
         {userRole === "admin" && (
         <div className="notification-icon-container" style={{ position: "relative" }}>
           <FaBell
+            className="notification-icon"
             style={{ cursor: "pointer", marginRight: "10px" }}
             onClick={() => setShowNotifications(prev => !prev)}
             onDoubleClick={() => {

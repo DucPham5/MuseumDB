@@ -24,6 +24,7 @@
       0 0 35px rgba(255, 255, 0, 0.2);
     text-align: left;
     animation: fade-in-strong 0.8s ease-in-out;
+    
   }
   
   /* === Title === */
@@ -191,4 +192,32 @@
     color: #fff;
     font-size: 1.2rem;
   }
+
+  .purchase-history-block {
+    background-color: #2e2e2e;
+    border-radius: 16px;
+    padding: 2rem;
+    margin-top: 2rem;
+    max-width: 800px;
+    width: 100%;
+    box-shadow:
+      0 0 10px rgba(255, 0, 150, 0.2),
+      0 0 20px rgba(0, 255, 255, 0.15);
+  
+    /* Dynamic height handling */
+    max-height: 60vh;
+    overflow-y: auto;
+    transition: max-height 0.3s ease;
+  }
+  
+  .purchase-history-block h2 {
+    color: #fff;
+    margin-bottom: 1rem;
+    position: sticky;
+    top: 0;
+    background-color: #2e2e2e;
+    padding-bottom: 0.5rem;
+    z-index: 1;
+  }
+  
   

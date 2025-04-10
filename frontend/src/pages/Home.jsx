@@ -96,7 +96,7 @@ const Home = () => {
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 1 }}
         >
-          <h2 className="main-title">The Art of the 21st Century</h2>
+          <h2 className="main-title">The gateway to all of history</h2>
           <p className="subtitle">
             Explore the evolution of artistic expression through contemporary exhibitions and timeless masterpieces.
           </p>

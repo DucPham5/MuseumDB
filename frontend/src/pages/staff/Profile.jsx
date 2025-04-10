@@ -275,36 +275,41 @@ const Profile = () => {
             </div>
           </div>
         )}
-
-        {/* Purchase History Section (inside card) */}
-        {isCustomer && showHistory && (
-          <div className="purchase-history-inside fade-in-strong">
-            <h3>Purchase History</h3>
-            <ul className="history-list">
-              {purchaseHistory.map((p, i) => (
-                <li key={i} className="history-row">
-                  <strong>{new Date(p.Date).toLocaleDateString()}</strong> | <strong>Type:</strong> {p.Type} |{" "}
-                  {p.Type === "ticket" ? (
-                    <>
-                      <strong>Ticket:</strong> {p.Ticket_Type} | <strong>Qty:</strong> {p.Quantity} |{" "}
-                      <strong>Price:</strong> ${p.Price} | <strong>Total:</strong> ${p.Total}
-                    </>
-                  ) : p.Type === "giftshop" ? (
-                    <>
-                      <strong>Total:</strong> ${p.Amount} | <strong>Payment:</strong> {p.Payment_Method}
-                    </>
-                  ) : p.Type === "membership" ? (
-                    <>
-                      <strong>Plan:</strong> {p.membership_type} ({p.payment_type}) |{" "}
-                      <strong>Paid:</strong> ${p.payment_amount} | <strong>Status:</strong> {p.status}
-                    </>
-                  ) : null}
-                </li>
-              ))}
-            </ul>
-          </div>
-        )}
       </motion.div>
+
+      {isCustomer && showHistory && (
+        <motion.div
+          className="purchase-history-block"
+          initial={{ opacity: 0, y: 40 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6 }}
+        >
+         
+          <ul className="history-list">
+          
+            {purchaseHistory.map((p, i) => (
+              <li key={i} className="history-row">
+                <strong>{new Date(p.Date).toLocaleDateString()}</strong> | <strong>Type:</strong> {p.Type} |{" "}
+                {p.Type === "ticket" ? (
+                  <>
+                    <strong>Ticket:</strong> {p.Ticket_Type} | <strong>Qty:</strong> {p.Quantity} |{" "}
+                    <strong>Price:</strong> ${p.Price} | <strong>Total:</strong> ${p.Total}
+                  </>
+                ) : p.Type === "giftshop" ? (
+                  <>
+                    <strong>Total:</strong> ${p.Amount} | <strong>Payment:</strong> {p.Payment_Method}
+                  </>
+                ) : p.Type === "membership" ? (
+                  <>
+                    <strong>Plan:</strong> {p.membership_type} ({p.payment_type}) |{" "}
+                    <strong>Paid:</strong> ${p.payment_amount} | <strong>Status:</strong> {p.status}
+                  </>
+                ) : null}
+              </li>
+            ))}
+          </ul>
+        </motion.div>
+      )}
     </main>
   );
 };

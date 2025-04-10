@@ -25,8 +25,9 @@
     background: #03171d;
     font-family:"Roboto Mono", monospace;
     overflow:hidden;
+    padding-top: 90px;
 }
-
+ 
 .container{
     width:75%;
 }

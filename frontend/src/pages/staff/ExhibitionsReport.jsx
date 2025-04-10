@@ -5,9 +5,6 @@ const ExhibitionReport = () => {
   const [exhibitions, setExhibitions] = useState([]);
   const [exhibitionPurchases, setExhibitionPurchases] = useState([]);
   const [searchQuery, setSearchQuery] = useState("");
-  // Date filter state variables
-  const [filterStartDate, setFilterStartDate] = useState("");
-  const [filterEndDate, setFilterEndDate] = useState("");
   // Special exhibition filter: "" for all, "special" for those that require a ticket, "regular" for those that do not.
   const [specialFilter, setSpecialFilter] = useState("");
 
@@ -42,62 +39,9 @@ const ExhibitionReport = () => {
         throw new Error("Failed to fetch exhibition purchase data");
       }
       const data = await response.json();
-     
       setExhibitionPurchases(data);
     } catch (error) {
       console.error("Error fetching exhibition purchases:", error);
-    }
-  };
-
-  // Helper function to format a Date as "YYYY-MM-DD"
-  const formatDate = (date) => {
-    const year = date.getFullYear();
-    const month = (date.getMonth() + 1).toString().padStart(2, "0");
-    const day = date.getDate().toString().padStart(2, "0");
-    return `${year}-${month}-${day}`;
-  };
-
-  // Quick filter functions for date ranges
-  const setLastWeek = () => {
-    const today = new Date();
-    const lastWeek = new Date(today);
-    lastWeek.setDate(today.getDate() - 7);
-    setFilterStartDate(formatDate(lastWeek));
-    setFilterEndDate(formatDate(today));
-  };
-
-  const setLastMonth = () => {
-    const today = new Date();
-    const lastMonth = new Date(today);
-    lastMonth.setMonth(today.getMonth() - 1);
-    setFilterStartDate(formatDate(lastMonth));
-    setFilterEndDate(formatDate(today));
-  };
-
-  const setLastYear = () => {
-    const today = new Date();
-    const lastYear = new Date(today);
-    lastYear.setFullYear(today.getFullYear() - 1);
-    setFilterStartDate(formatDate(lastYear));
-    setFilterEndDate(formatDate(today));
-  };
-
-  const clearDateFilter = () => {
-    setFilterStartDate("");
-    setFilterEndDate("");
-  };
-
-  // Handler for the quick date range dropdown change
-  const handleQuickFilterChange = (e) => {
-    const option = e.target.value;
-    if (option === "lastWeek") {
-      setLastWeek();
-    } else if (option === "lastMonth") {
-      setLastMonth();
-    } else if (option === "lastYear") {
-      setLastYear();
-    } else {
-      clearDateFilter();
     }
   };
 
@@ -106,15 +50,11 @@ const ExhibitionReport = () => {
     setSpecialFilter(e.target.value);
   };
 
-  // Filter exhibitions based on search, date range (using both Start_Date and End_Date) and special filter.
+  // Filter exhibitions based on search and special filter.
   const filteredExhibitions = exhibitions.filter((exhibition) => {
-    const exhibitionNameMatch = exhibition.Name.toLowerCase().includes(searchQuery.toLowerCase());
-    const exhibitionStart = new Date(exhibition.Start_Date);
-    const exhibitionEnd = new Date(exhibition.End_Date);
-    // Check that the exhibition's End_Date is on/after filterStartDate
-    // and its Start_Date is on/before filterEndDate.
-    const passesStartFilter = filterStartDate ? exhibitionEnd >= new Date(filterStartDate) : true;
-    const passesEndFilter = filterEndDate ? exhibitionStart <= new Date(filterEndDate) : true;
+    const exhibitionNameMatch = exhibition.Name
+      .toLowerCase()
+      .includes(searchQuery.toLowerCase());
 
     let specialMatch = true;
     if (specialFilter === "special") {
@@ -123,7 +63,7 @@ const ExhibitionReport = () => {
       specialMatch = exhibition.requires_ticket === 0;
     }
 
-    return exhibitionNameMatch && passesStartFilter && passesEndFilter && specialMatch;
+    return exhibitionNameMatch && specialMatch;
   });
 
   // Helper: Get aggregated purchase data for an exhibition.
@@ -132,10 +72,15 @@ const ExhibitionReport = () => {
       (item) => Number(item.Exhibition_ID) === Number(exhibition.Exhibition_ID)
     );
     if (!agg) {
-      console.log(`For exhibition ${exhibition.Exhibition_ID}, no aggregated record found—using default.`);
+      console.log(
+        `For exhibition ${exhibition.Exhibition_ID}, no aggregated record found—using default.`
+      );
       return { Tickets_Bought: 0, Amount_Made: 0 };
     }
-    console.log(`For exhibition ${exhibition.Exhibition_ID}, aggregated data:`, agg);
+    console.log(
+      `For exhibition ${exhibition.Exhibition_ID}, aggregated data:`,
+      agg
+    );
     return agg;
   };
 
@@ -163,7 +108,8 @@ const ExhibitionReport = () => {
   if (regularExhibitions.length > 0) {
     const firstRegular = regularExhibitions[0];
     const agg = exhibitionPurchases.find(
-      (item) => Number(item.Exhibition_ID) === Number(firstRegular.Exhibition_ID)
+      (item) =>
+        Number(item.Exhibition_ID) === Number(firstRegular.Exhibition_ID)
     );
     if (agg) {
       regularTotalAmount = Number(agg.Amount_Made);
@@ -182,46 +128,15 @@ const ExhibitionReport = () => {
         <h1>Exhibition Report</h1>
       </div>
 
-      {/* Combined Controls: Quick Date Range Dropdown, Manual Date Inputs, Special Filter, and Search Bar */}
+      {/* Controls: Only the Special Filter and Search remain */}
       <div className="exh-report-controls">
-        <div className="exh-report-date-controls">
-          <div className="exh-report-date-select">
-            <select id="quickDateRange" onChange={handleQuickFilterChange}>
-              <option value="">--Select Range--</option>
-              <option value="lastWeek">Last Week</option>
-              <option value="lastMonth">Last Month</option>
-              <option value="lastYear">Last Year</option>
-              <option value="clear">Clear</option>
-            </select>
-          </div>
-          <div className="exh-report-manual-dates">
-            <div>
-              <label htmlFor="startDate">Start Date:</label>
-              <input
-                id="startDate"
-                type="date"
-                value={filterStartDate}
-                onChange={(e) => setFilterStartDate(e.target.value)}
-              />
-            </div>
-            <div>
-              <label htmlFor="endDate">End Date:</label>
-              <input
-                id="endDate"
-                type="date"
-                value={filterEndDate}
-                onChange={(e) => setFilterEndDate(e.target.value)}
-              />
-            </div>
-          </div>
-          <div className="exh-report-special-filter">
-            <label htmlFor="specialFilter">Special Exhibition:</label>
-            <select id="specialFilter" onChange={handleSpecialFilterChange}>
-              <option value="">All</option>
-              <option value="special">Special Only</option>
-              <option value="regular">Regular Only</option>
-            </select>
-          </div>
+        <div className="exh-report-special-filter">
+          <label htmlFor="specialFilter">Special Exhibition:</label>
+          <select id="specialFilter" onChange={handleSpecialFilterChange}>
+            <option value="">All</option>
+            <option value="special">Special Only</option>
+            <option value="regular">Regular Only</option>
+          </select>
         </div>
         <div className="exh-report-search">
           <input
@@ -255,7 +170,10 @@ const ExhibitionReport = () => {
               <th>Amount Made ($)</th>
               <th># Of Reviews</th>
               <th>Average Rating</th>
+              {/* Commented out Status Column */}
+              {/*
               <th>Status</th>
+              */}
             </tr>
           </thead>
           <tbody>
@@ -266,11 +184,22 @@ const ExhibitionReport = () => {
                   <td>{exhibition.Name}</td>
                   <td>{new Date(exhibition.Start_Date).toLocaleDateString()}</td>
                   <td>{new Date(exhibition.End_Date).toLocaleDateString()}</td>
-                  <td>{(exhibition.requires_ticket === true || exhibition.requires_ticket === 1) ? "Yes" : "No"}</td>
+                  <td>
+                    {(exhibition.requires_ticket === true ||
+                      exhibition.requires_ticket === 1)
+                      ? "Yes"
+                      : "No"}
+                  </td>
                   <td>{agg.Tickets_Bought}</td>
                   <td>${parseFloat(agg.Amount_Made).toLocaleString()}</td>
                   <td>{exhibition.complaintCount}</td>
-                  <td>{exhibition.averageReview !== null ? Number(exhibition.averageReview).toFixed(1) : 'N/A'}</td>
+                  <td>
+                    {exhibition.averageReview !== null
+                      ? Number(exhibition.averageReview).toFixed(1)
+                      : "N/A"}
+                  </td>
+                  {/* Commented out Status Column */}
+                  {/*
                   <td>
                     {exhibition.IsActive ? (
                       <span className="badge-active">Active</span>
@@ -278,6 +207,7 @@ const ExhibitionReport = () => {
                       <span className="badge-inactive">Inactive</span>
                     )}
                   </td>
+                  */}
                 </tr>
               );
             })}
@@ -289,4 +219,3 @@ const ExhibitionReport = () => {
 };
 
 export default ExhibitionReport;
-

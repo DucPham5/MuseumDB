@@ -1,5 +1,5 @@
 /* Default Header (Transparent, White Text) */
-.header {
+.header { 
   font-family: "JetBrains Mono", monospace;
   position: fixed;
   top: 0;
@@ -101,5 +101,15 @@
   z-index: 10;
   width: 250px;
   box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+}
+
+/* Notification icon default (inherits color) */
+.notification-icon {
+  transition: color 0.2s ease;
+}
+
+/* When hovered, turn black */
+.notification-icon:hover {
+  color: black !important;
 }
 

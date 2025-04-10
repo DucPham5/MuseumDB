@@ -1,129 +1,106 @@
-/* Below is for AdminHome */
-/* then follows the styles for manageemployees */
-
-/* Admin Dashboard Title Container */
-.admin-title-container {
-    text-align: center; /* Centers the text */
-    margin-bottom: 8%; /* Adds spacing below title */
-    width: 100%; /* Ensures it stretches full width */
-    
-}
-
-/* Manager Dashboard Title Container */
-.manager-title-container {
-    text-align: center; /* Centers the text */
-    margin-bottom: 7%; /* Adds spacing below title */
-    width: 100%; /* Ensures it stretches full width */
-}
-
-/* Curator Dashboard Title Container */
-.curator-title-container {
-    text-align: center; /* Centers the text */
-    margin-bottom: 7%; /* Adds spacing below title */
-    width: 100%; /* Ensures it stretches full width */
-}
-
-.admin-button {
-    position: relative;
-    top: 40px;
-    z-index: 10; 
-    min-width: 180px; 
-    padding: 10px;
-    font-size: 16px;
-    background-color: rgb(255, 255, 255);
-    border: 1px solid #ccc;
-    cursor: pointer;
-    margin-bottom: 30px;
-}
-
-.admin-button:hover {
-    background-color: #f8f8f8;
-}
-
+/* === Admin Dashboard === */
 .admin-container {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    flex-direction: column;
-    width: 100%;
+    background-color: #1c1c1c;
     min-height: 100vh;
-    
-
-    background-image: url('/adminhomepic.jpg');
-    background-size: cover;
-    background-position: center;
-    background-repeat: no-repeat;
-    height: 100vh;
     width: 100%;
-
-}
-.admin-reports {
-    display: flex;
-    flex-direction: column; /* Stacks buttons vertically */
-    gap: 1rem;
-    width: 250px; /* Adjust width as needed */
-  }
-  .admin-management {
+    padding: 3rem 2rem;
     display: flex;
     flex-direction: column;
-    gap: 1rem;
-    width: 250px;
-}
-
-
-.admin-dashboard {
-    display: flex;
-    justify-content: space-between; /* Pushes first item left and second item right */
-    align-items: flex-start;
-    width: 70%; /* Ensure full width of the container */
-    gap: 20px; /* Optional: add space between columns */
+    align-items: center;
   }
   
-
-.admin-dropdown {
-    display: block;
-    width: 200px;
-    margin: 10px auto;
-}
-
-/* Below is for file ManageEmployees */
-/* Page container */
-.manage-employees-container {
+  .admin-title {
+    color: white;
+    font-size: 2.5rem;
+    margin-bottom: 1rem;
+    text-align: center;
+  }
+  
+  .admin-dashboard {
+    display: flex;
+    gap: 4rem;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin-top: 3rem;
+  }
+  
+  .admin-card {
+    background-color: #2c2c2c;
+    padding: 2rem;
+    border-radius: 16px;
+    width: 320px;
+    box-shadow:
+      0 0 10px rgba(255, 0, 0, 0.15),
+      0 0 5px rgba(255, 0, 0, 0.08);
     display: flex;
     flex-direction: column;
-    align-items: center;
-    width: 100%;
-    min-height: 100vh;
-    background-image: url('/manageemployees.jpg');
-    background-size: cover;
-    background-position: center;
-    background-repeat: no-repeat;
-}
-
-/* Header Section - Aligns Title & Add Button */
-.manage-header {
+    gap: 1rem;
+    transition: box-shadow 0.3s ease;
+  }
+  
+  .admin-card:hover {
+    box-shadow:
+      0 0 15px rgba(255, 0, 0, 0.25),
+      0 0 8px rgba(255, 0, 0, 0.15);
+  }
+  
+  .admin-card h4 {
+    color: white;
+    font-size: 1.5rem;
+    margin-bottom: 1rem;
+  }
+  
+  .admin-button {
+    background-color: #ffffff;
+    color: #1c1c1c;
+    border: none;
+    padding: 12px 16px;
+    font-size: 16px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+  
+  .admin-button:hover {
+    background-color: #f2f2f2;
+  }
+  
+  .admin-profile-button {
+    margin-top: 3rem;
+    background-color: #1e1e1e;
+    color: white;
+    border: none;
+    padding: 12px 16px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+  }
+  
+  .admin-profile-button:hover {
+    background-color: #000;
+  }
+  
+  /* === ManageEmployees Shared Styles === */
+  
+  .manage-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    width: 80%;
-    margin-top: 80px;
-}
-
-/* Title */
-.page-title {
-    font-size: 3rem;
-    font-weight: bold;
-    color: #0b0c0d;
+    width: 90%;
+    margin-top: 40px;
+    flex-wrap: wrap;
+    gap: 1rem;
+  }
+  
+  .manage-header h1 {
+    color: white;
+    font-size: 2rem;
     margin: 0;
-}
-
-.filter-buttons {
+  }
+  
+  .filter-buttons {
     display: flex;
     gap: 10px;
-    margin-top: 10px;
-    margin-bottom: 20px;
-    margin-left: 150px; 
-
   }
   
   .filter-buttons button {
@@ -147,10 +124,7 @@
     border-color: #007bff;
   }
   
-  
-
-/* "Add Employee" Button */
-.open-modal-button {
+  .open-modal-button {
     background-color: #007bff;
     color: white;
     border: none;
@@ -158,279 +132,181 @@
     border-radius: 5px;
     cursor: pointer;
     font-size: 16px;
-    margin-left: auto;
-}
-
-/* Employee Table */
-.employee-table-container {
+  }
+  
+  /* Table Container */
+  .employee-table-container {
     width: 100%;
     margin-top: 20px;
-}
-
-.employee-table {
+    overflow-x: auto;
+  }
+  
+  .manage-table {
     width: 100%;
-    border: 1px solid #ccc;
     border-collapse: collapse;
-    border-radius: 10px;
+    background-color: #2c2c2c;
+    color: white;
+    border-radius: 12px;
     overflow: hidden;
-    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
-    background-color: rgba(255, 255, 255, 0.8); /* More transparency */
-}
-
-.employee-table th, .employee-table td {
-    padding: 10px;
-    border-bottom: 1px solid #ccc;
+    box-shadow: 0px 4px 10px rgba(255, 0, 0, 0.1);
+  }
+  
+  .manage-table th,
+  .manage-table td {
+    padding: 12px;
     text-align: center;
-}
-
-.employee-table th {
+    border-bottom: 1px solid #444;
+  }
+  
+  .manage-table th {
     background-color: #313639;
-    color: white;
-}
-
-.employee-table tr:nth-child(even) {
-    background-color: #f2f2f2;
-}
-
-/* Buttons */
-.inactive-button {
-    padding: 5px 10px;
-    background-color: rgb(147, 37, 37);
-    color: white;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-}
-
-.active-button {
-    padding: 5px 10px;
-    background-color: rgb(19, 106, 100);
+  }
+  
+  .manage-table tr:nth-child(even) {
+    background-color: #242424;
+  }
+  
+  /* Buttons inside the table */
+  .activate-button {
+    background-color: #007bff;
+    font-weight: bold;
     color: white;
     border: none;
-    border-radius: 5px;
+    padding: 6px 12px;
     cursor: pointer;
-}
-
-/* Responsive Fixes */
-@media screen and (max-width: 768px) {
-    .manage-header {
-        flex-direction: column;
-        align-items: center;
-    }
-
-    .page-title {
-        text-align: center;
-        margin-bottom: 10px;
-    }
-
-    .open-modal-button {
-        margin-left: 0;
-        margin-top: 10px;
-    }
-
-    .employee-table-container {
-        width: 95%;
-    }
-}
-/* Modal Overlay - Background Blur */
-.modal-overlay {
+    border-radius: 5px;
+  }
+  
+  .activate-button:hover {
+    background-color: #0056b3;
+  }
+  
+  .deactivate-button {
+    background-color: #e74c3c;
+    font-weight: bold;
+    color: white;
+    border: none;
+    padding: 6px 12px;
+    cursor: pointer;
+    border-radius: 5px;
+  }
+  
+  .deactivate-button:hover {
+    background-color: #c0392b;
+  }
+  
+  /* === Modal Overlay === */
+  .modal-overlay {
     position: fixed;
     top: 0;
     left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0, 0, 0, 0.5); /* Dark transparent background */
+    width: 100vw;
+    height: 100vh;
+    background: rgba(0, 0, 0, 0.5);
     display: flex;
     justify-content: center;
     align-items: center;
-}
-
-/* Modal Content - Centered Box */
-.modal-content {
-    background: white;
-    padding: 20px;
-    border-radius: 10px;
-    width: 400px;
-    text-align: center;
-    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+    z-index: 1000;
+  }
+  
+  .modal-content {
+    background-color: #2c2c2c;
+    padding: 2rem;
+    border-radius: 16px;
+    width: 90%;
+    max-width: 500px;
+    box-shadow: 0 0 20px rgba(255, 0, 0, 0.3);
     display: flex;
     flex-direction: column;
-    align-items: center;
-}
-
-.modal-content h2 {
-    color: black; /* or a contrasting color */
+    gap: 1rem;
   }
   
-
-/* Input Fields */
-.input-field {
-    width: 90%;
-    padding: 10px;
-    margin: 8px 0;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-}
-
-.drop-zone {
-    position: relative;
-    width: 100%;
-    height: 200px;
-    border: 2px dashed #aaa;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background: white;
+  .modal-content h2 {
+    color: white;
     text-align: center;
-    box-sizing: border-box;
-    cursor: pointer;
+    margin-bottom: 1rem;
   }
   
-  .drop-text {
-    z-index: 1;
-    color: #888;
-  }
-  
-  .file-input {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    opacity: 0;
-    z-index: 2;
-    cursor: pointer;
-  }
-  
-  .preview-image {
-    max-width: 100%;
-    max-height: 100%;
-    object-fit: contain;
-    z-index: 1;
-  }
-
-
-  /* Green Restock Button */
-.restock-btn {
-    width:80px;
-    background-color: green;
-    color: white;
-    padding: 10px 15px;
+  .input-field {
+    padding: 10px;
+    border-radius: 6px;
     border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-  }
-  
-  .restock-btn:hover {
-    background-color: darkgreen; /* Darker green on hover */
-  }
-  
-  /* Red Delete Button */
-  .delete-btn {
-    width: 80px;
-    background-color: red;
+    background-color: #3b3b3b;
     color: white;
-    padding: 10px 15px;
-    margin-top:5px;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
   }
   
-  .delete-btn:hover {
-    background-color: darkred; /* Darker red on hover */
+  .input-field::placeholder {
+    color: #aaa;
   }
   
-
-/* Buttons inside Modal */
-.modal-buttons {
+  /* Modal Buttons */
+  .modal-buttons {
     display: flex;
     justify-content: space-between;
-    margin-top: 15px;
-    width: 100%;
-}
-
-/* Add Employee Button */
-.add-employee-button {
+    margin-top: 1rem;
+    gap: 1rem;
+  }
+  
+  .add-employee-button {
+    flex: 1;
     background-color: #28a745;
     color: white;
     border: none;
-    padding: 10px 15px;
-    border-radius: 5px;
+    padding: 10px;
+    border-radius: 6px;
     cursor: pointer;
-    font-size: 16px;
+  }
+  
+  .add-employee-button:hover {
+    background-color: #218838;
+  }
+  
+  .close-modal-button {
     flex: 1;
-    margin-right: 5px;
-}
-
-/* Cancel Button */
-.close-modal-button {
     background-color: #dc3545;
     color: white;
     border: none;
-    padding: 10px 15px;
-    border-radius: 5px;
-    cursor: pointer;
-    font-size: 16px;
-    flex: 1;
-}
-
-/* "Add Employee" Button on Main Page */
-.open-modal-button {
-    background-color: #007bff;
-    color: white;
-    border: none;
-    padding: 10px 15px;
-    border-radius: 5px;
-    cursor: pointer;
-    font-size: 16px;
-    margin-left: auto;
-}
-.footer {
-    position: fixed;
-    bottom: 0;
-    width: 100%;
-    background-color: black;
-    color: white;
-    text-align: center;
     padding: 10px;
-}
-
-/* Button Styling */
-.activate-button {
-    background-color: rgb(8, 118, 161);
-    font-weight: bold;
-    color: white;
-    border: none;
-    padding: 8px 12px;
+    border-radius: 6px;
     cursor: pointer;
-    border-radius: 5px;
-    transition: background-color 0.3s ease;
-}
-
-.deactivate-button {
-    background-color: rgb(179, 8, 8);
-    font-weight: bold;
-    color: white;
-    border: none;
-    padding: 8px 12px;
-    cursor: pointer;
-    border-radius: 5px;
-    transition: background-color 0.3s ease;
-}
-
- /* Add hover effects */ 
-.activate-button:hover {
-    background-color: rgb(22, 26, 22);
-}
-
-.deactivate-button:hover {
-    background-color: rgb(36, 19, 19);
-}
-
-
-
+  }
   
+  .close-modal-button:hover {
+    background-color: #c82333;
+  }
 
+  /* === Restock Button === */
+.restock-btn {
+    background-color: #27ae60;
+    color: white;
+    font-weight: bold;
+    padding: 8px 14px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    margin: 4px 4px 0 0;
+    transition: background-color 0.2s ease;
+  }
+  
+  .restock-btn:hover {
+    background-color: #1e874b;
+  }
+  
+  /* === Delete Button === */
+  .delete-btn {
+    background-color: #e74c3c;
+    color: white;
+    font-weight: bold;
+    padding: 8px 14px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    margin: 4px 0 0 0;
+    transition: background-color 0.2s ease;
+  }
+  
+  .delete-btn:hover {
+    background-color: #c0392b;
+  }
+  
+  
