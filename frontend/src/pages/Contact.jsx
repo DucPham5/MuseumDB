@@ -31,7 +31,7 @@ const ContactPage = () => {
   }, [reviews]);
 
   useEffect(() => { 
-    fetch("https://museumdb.onrender.com/manage-exhibition")
+    fetch("https://museumdb.onrender.com/exhibitions")
       .then((res) => {
         if (!res.ok) throw new Error(`Failed to fetch: ${res.status}`);
         return res.json();

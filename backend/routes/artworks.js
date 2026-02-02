@@ -1,5 +1,6 @@
 const url = require("url");
 const db = require("../db");
+const authMiddleware = require("../middleware/authMiddleware");
 
 module.exports = (req, res) => {
   const parsedUrl = url.parse(req.url, true);

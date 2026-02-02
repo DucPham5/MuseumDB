@@ -104,12 +104,9 @@
 }
 
 /* Notification icon default (inherits color) */
-.notification-icon {
-  transition: color 0.2s ease;
-}
 
-/* When hovered, turn black */
-.notification-icon:hover {
+/* Bell icon turns black when scrolled */
+.header.scrolled .notification-icon,
+.header.tickets-page .notification-icon {
   color: black !important;
 }
-

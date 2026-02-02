@@ -139,7 +139,7 @@ useEffect(() => {
             {isManager ? "Manager" : isCurator ? "Curator" : "Admin"}
           </AnimatedLink>
         )}
-
+        
 
         {/* Notifications for admin users */}
         {userRole === "admin" && (
